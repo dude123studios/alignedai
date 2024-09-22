@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>AlignAI</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
+    <style>
+        /* Add some basic styles for the modal */
+        .modal {
+            display: block;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+        }
+        .modal-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #acceptCheckbox {
+            margin-right: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- EULA Modal -->
+    <div id="eulaModal" class="modal">
+        <div class="modal-content">
+            <h2>End User License Agreement (EULA)</h2>
+            <p>Effective Date: [Insert Date]</p>
+            <p>This End User License Agreement ("Agreement") is a legal agreement between you ("User" or "you") and AlignedAI LLC ("Company," "we," or "us") regarding your use of the Posture Tracking App (the "App"). By downloading, installing, or using the App, you agree to be bound by the terms of this Agreement. If you do not agree to the terms of this Agreement, do not download or use the App.</p>
+            <p><strong>1. License Grant</strong><br>
+                We grant you a limited, non-exclusive, non-transferable, and revocable license to use the App solely for personal, non-commercial purposes on any device that you own or control. This license does not allow you to distribute or make the App available over a network where it could be used by multiple devices at the same time.</p>
+                
+                <p><strong>2. Restrictions</strong><br>
+                You agree that you will not:</p>
+                <ul>
+                    <li>Copy, modify, or distribute the App or any part thereof.</li>
+                    <li>Reverse-engineer, decompile, disassemble, or attempt to derive the source code of the App.</li>
+                    <li>Use the App for any illegal, unauthorized, or commercial purposes.</li>
+                    <li>Bypass, disable, or circumvent any security measures intended to protect the App.</li>
+                    <li>Share your account with others or allow others to use your account.</li>
+                </ul>
+                
+                <p><strong>3. Intellectual Property</strong><br>
+                The App, including but not limited to all content, features, and functionality, is owned by AlignedAI LLC and is protected by copyright, trademark, and other intellectual property laws. You do not acquire any ownership rights in the App, and all rights not expressly granted to you are reserved by the Company.</p>
+                
+                <p><strong>4. Privacy</strong><br>
+                We collect, store, and use your data in accordance with our Privacy Policy, which is incorporated into this Agreement. By using the App, you consent to our collection and use of data as described in the Privacy Policy.</p>
+                
+                <p><strong>5. Health Disclaimer</strong><br>
+                The App provides information and feedback on posture and body tracking based on the data it receives from your device. However, the App is not a medical device and does not provide medical advice. You should consult with a healthcare provider before making any significant changes to your posture or physical activities. We are not responsible for any injuries, conditions, or issues arising from your use of the App.</p>
+                
+                <p><strong>6. Updates and Modifications</strong><br>
+                We may release updates, patches, or new versions of the App from time to time, which may be automatically downloaded and installed on your device. You agree that these updates are subject to the terms of this Agreement. We reserve the right to modify or discontinue the App at any time, without notice or liability.</p>
+                
+                <p><strong>7. Termination</strong><br>
+                This Agreement is effective until terminated by you or us. We may terminate your access to the App at any time if you violate any terms of this Agreement. Upon termination, you must cease all use of the App and delete any copies of the App from your devices.</p>
+                
+                <p><strong>8. Warranty Disclaimer</strong><br>
+                The App is provided on an "as-is" and "as-available" basis. We make no warranties or representations, express or implied, regarding the App, including but not limited to its accuracy, reliability, or fitness for a particular purpose. Your use of the App is at your own risk.</p>
+                
+                <p><strong>9. Limitation of Liability</strong><br>
+                To the maximum extent permitted by law, AlignedAI LLC will not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of the App. In no event shall our total liability exceed the amount you paid (if any) for the App.</p>
+                
+                <p><strong>10. Governing Law</strong><br>
+                This Agreement is governed by and construed in accordance with the laws of the United States. Any legal actions related to this Agreement must be brought in the courts of the United States.</p>
+                
+                <p><strong>11. Severability</strong><br>
+                If any provision of this Agreement is found to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.</p>
+                
+                <p><strong>12. Entire Agreement</strong><br>
+                This Agreement, along with our Privacy Policy, constitutes the entire agreement between you and AlignedAI LLC regarding the App and supersedes any prior agreements or understandings.</p>
+                
+                <p><strong>13. Contact Information</strong><br>
+                If you have any questions or concerns about this Agreement, please contact us at alignedaillc@gmail.com.</p>
+                
+
+            <div class="modal-footer">
+                <input type="checkbox" id="acceptCheckbox" />
+                <label for="acceptCheckbox">I accept the terms and conditions</label>
+                <br/>
+                <button id="acceptButton" disabled>Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo">AlignAI</div>
+        <div class="nav-items">
+            <a href="index.html#home">Home</a>
+            <a href="stretches.html">Stretches</a>
+            <a href="posture.html">Posture</a>
+            <a href="about.html">About</a>
+            <a href="signup.html">Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- Main Page Content (Hidden by default) -->
+    <div id="home" class="content active hidden">
+        <section class="hero">
+            <div class="hero-container">
+                <div class="column-left">
+                    <button class="button" id="toggleButton" onclick="toggleVideoDisplay()">Begin Posture Tracking</button>
+                    <div id="buttonText">Tracking is currently inactive.</div>
+                </div>
+                <div class="column-right">
+                    <div id="container">
+                        <canvas id="canvas" width="720" height="560" style="display: none;"></canvas>
+                        <video id="video" width="720" height="560" autoplay style="display: none;"></video>
+                        <div id="cameraStatus">Camera off</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script defer src="script.js"></script>
+    <script>
+        // Handle the modal behavior
+        document.getElementById('acceptCheckbox').addEventListener('change', function() {
+            document.getElementById('acceptButton').disabled = !this.checked;
+        });
+
+        document.getElementById('acceptButton').addEventListener('click', function() {
+            // Hide the modal
+            document.getElementById('eulaModal').style.display = 'none';
+            // Show the main content
+            document.getElementById('home').classList.remove('hidden');
+        });
+
+        function showTab(tabId) {
+            var contents = document.querySelectorAll('.content');
+            contents.forEach(function(content) {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
+</body>
+</html>

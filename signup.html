@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sign Up</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">AlignAI</div>
+        <div class="nav-items">
+            <a href="index.html#home">Home</a>
+            <a href="stretches.html">Stretches</a>
+            <a href="posture.html">Posture</a>
+            <a href="about.html">About</a>
+            <a href="signup.html">Sign Up</a>
+        </div>
+    </nav>
+    <div class="signup-container">
+        <h1>Sign Up for Membership</h1>
+        <form class="signup-form" id="signupForm">
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
+            <input type="email" id="email" name="email" placeholder="Your Email" required>
+            <button type="submit">Sign Up</button>
+        </form>
+        <div class="contact-info">
+            <p>Contact Me</p>
+            <p>Phone: +1-408-123-4567</p>
+            <p>Instagram: <a href="https://instagram.com/alignaiphysiotherapy" target="_blank">@your_handle</a></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            const data = { name: name, email: email };
+
+            fetch('https://yourapi.com/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Sign up successful!');
+                // Clear the form fields
+                document.getElementById('signupForm').reset();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Sign up failed. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>
